@@ -24,20 +24,20 @@ function simpleSegment(text: string): string[] {
 router.get('/overview', async (req, res) => {
   try {
     // 总帖子数
-    const [totalResult] = await pool.query('SELECT COUNT(*) as total FROM data');
+    const [totalResult] = await pool.query('SELECT COUNT(*) as total FROM community_posts');
     const total = (totalResult as any)[0].total;
 
     // 消极情绪占比
-    const [negativeResult] = await pool.query('SELECT COUNT(*) as negative FROM data WHERE author_attitude = ?', ['消极']);
+    const [negativeResult] = await pool.query('SELECT COUNT(*) as negative FROM community_posts WHERE attitude = ?', ['消极']);
     const negativeCount = (negativeResult as any)[0].negative;
     const negativeRate = total > 0 ? Math.round((negativeCount / total) * 100) : 0;
 
     // 最多的问题类型
-    const [topTypeResult] = await pool.query('SELECT question_type, COUNT(*) as count FROM data GROUP BY question_type ORDER BY count DESC LIMIT 1');
+    const [topTypeResult] = await pool.query('SELECT question_type, COUNT(*) as count FROM community_posts GROUP BY question_type ORDER BY count DESC LIMIT 1');
     const topType = (topTypeResult as any)[0]?.question_type || '无';
 
     // 最高浏览量
-    const [topViewsResult] = await pool.query('SELECT MAX(CAST(view_count AS UNSIGNED)) as maxViews FROM data');
+    const [topViewsResult] = await pool.query('SELECT MAX(CAST(views AS UNSIGNED)) as maxViews FROM community_posts');
     const topViews = (topViewsResult as any)[0].maxViews || 0;
 
     res.json({ total, negativeRate, topType, topViews });
@@ -51,7 +51,7 @@ router.get('/overview', async (req, res) => {
 router.get('/distribution', async (req, res) => {
   try {
     // 问题类型分布
-    const [typesResult] = await pool.query('SELECT question_type, COUNT(*) as count FROM data GROUP BY question_type');
+    const [typesResult] = await pool.query('SELECT question_type, COUNT(*) as count FROM community_posts GROUP BY question_type');
     const types = (typesResult as any[]).map(item => ({
       '问题类型': item.question_type,
       count: item.count
@@ -59,13 +59,13 @@ router.get('/distribution', async (req, res) => {
 
     // 情绪与类型交叉数据
     const [crossResult] = await pool.query(`
-      SELECT question_type, author_attitude, COUNT(*) as count 
-      FROM data 
-      GROUP BY question_type, author_attitude
+      SELECT question_type, attitude, COUNT(*) as count 
+      FROM community_posts 
+      GROUP BY question_type, attitude
     `);
     const crossData = (crossResult as any[]).map(item => ({
       '问题类型': item.question_type,
-      '作者态度': item.author_attitude,
+      '作者态度': item.attitude,
       count: item.count
     }));
 
@@ -80,8 +80,8 @@ router.get('/distribution', async (req, res) => {
 router.get('/wordcloud', async (req, res) => {
   try {
     // 获取所有帖子内容
-    const [contentResult] = await pool.query('SELECT post_content FROM data');
-    const contents = (contentResult as any[]).map(item => item.post_content || '');
+    const [contentResult] = await pool.query('SELECT content FROM community_posts');
+    const contents = (contentResult as any[]).map(item => item.content || '');
 
     // 分词并统计词频
     const wordCount: Record<string, number> = {};
@@ -109,15 +109,15 @@ router.get('/wordcloud', async (req, res) => {
 router.get('/top10', async (req, res) => {
   try {
     const [top10Result] = await pool.query(`
-      SELECT post_title, view_count, post_url 
-      FROM data 
-      ORDER BY CAST(view_count AS UNSIGNED) DESC 
+      SELECT title, views, link 
+      FROM community_posts 
+      ORDER BY CAST(views AS UNSIGNED) DESC 
       LIMIT 10
     `);
     const top10 = (top10Result as any[]).map(item => ({
-      '帖子标题': item.post_title,
-      '浏览量': item.view_count,
-      '帖子链接': item.post_url
+      '帖子标题': item.title,
+      '浏览量': item.views,
+      '帖子链接': item.link
     }));
 
     res.json(top10);

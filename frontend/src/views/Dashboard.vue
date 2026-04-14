@@ -113,8 +113,8 @@
                       <div class="report-title">{{ report.title }}</div>
                       <div class="report-meta">
                         <span>{{ new Date(report.timestamp).toLocaleString() }}</span>
-                        <el-button size="small" type="primary" @click="downloadSavedReport(report)">
-                          下载
+                        <el-button size="small" type="primary" @click="viewSavedReport(report)">
+                          查看
                         </el-button>
                       </div>
                     </div>
@@ -322,10 +322,12 @@ const startAIAnalysis = async (type: string) => {
             const data = JSON.parse(dataStr)
             if (data.code === 200 && data.success && data.data) {
               const result = data.data.result
-              if (result && result.output_text_0) {
+              if (result) {
                 // 实时更新结果
-                if (typeof result.output_text_0 === 'string') {
-                  currentResult = result.output_text_0
+                let outputText = result.output_text_0 || result.text || result.content || ''
+                if (typeof outputText === 'string') {
+                  // 直接使用原始字符串，处理换行
+                  currentResult = outputText
                   // 处理换行，将 \n 替换为 <br> 标签
                   aiDialog.value.result = currentResult.replace(/\n/g, '<br>')
                 }
@@ -389,6 +391,13 @@ const downloadSavedReport = (report) => {
   link.click()
   document.body.removeChild(link)
   URL.revokeObjectURL(url)
+}
+
+const viewSavedReport = (report) => {
+  const content = report.content
+  const blob = new Blob([content], { type: 'text/html; charset=utf-8' })
+  const url = URL.createObjectURL(blob)
+  window.open(url, '_blank', 'width=800,height=600')
 }
 
 const closeContextMenu = () => {

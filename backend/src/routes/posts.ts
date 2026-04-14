@@ -10,7 +10,7 @@ router.get('/', async (req, res) => {
     const limitNum = parseInt(limit as string);
     const offset = (pageNum - 1) * limitNum;
 
-    let query = 'SELECT * FROM data WHERE 1=1';
+    let query = 'SELECT * FROM community_posts WHERE 1=1';
     let params: any[] = [];
 
     // 筛选条件
@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
       params.push(type);
     }
     if (attitude) {
-      query += ' AND author_attitude = ?';
+      query += ' AND attitude = ?';
       params.push(attitude);
     }
 
@@ -32,20 +32,20 @@ router.get('/', async (req, res) => {
 
     // 转换字段名以匹配前端期望
     const formattedPosts = (posts as any[]).map(post => ({
-      '帖子标题': post.post_title,
-      '帖子链接': post.post_url,
+      '帖子标题': post.title,
+      '帖子链接': post.link,
       '帖子ID': post.post_id,
       '作者': post.author,
-      '作者个人页链接': post.author_page,
-      '帖子内容（文本）': post.post_content,
+      '作者个人页链接': post.author_link,
+      '帖子内容（文本）': post.content,
       '发布时间': post.publish_time,
-      '浏览量': post.view_count,
+      '浏览量': post.views,
       '问题类型': post.question_type,
-      '作者态度': post.author_attitude
+      '作者态度': post.attitude
     }));
 
     // 获取总数
-    let countQuery = 'SELECT COUNT(*) as total FROM data WHERE 1=1';
+    let countQuery = 'SELECT COUNT(*) as total FROM community_posts WHERE 1=1';
     let countParams: any[] = [];
 
     if (type) {
@@ -53,7 +53,7 @@ router.get('/', async (req, res) => {
       countParams.push(type);
     }
     if (attitude) {
-      countQuery += ' AND author_attitude = ?';
+      countQuery += ' AND attitude = ?';
       countParams.push(attitude);
     }
 
