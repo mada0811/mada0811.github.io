@@ -158,12 +158,22 @@ onMounted(() => {
 <style scoped>
 .post-table {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .table-header {
   margin-bottom: 16px;
   display: flex;
   justify-content: flex-end;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.el-table {
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .title-link {
@@ -178,7 +188,8 @@ onMounted(() => {
 .pagination {
   margin-top: 16px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
+  width: 100%;
 }
 
 .attitude-positive {

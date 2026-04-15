@@ -40,51 +40,95 @@
       <el-main class="content">
         <!-- 数据看板页面 -->
         <div v-if="!showReportPage" class="content-wrapper">
+          <!-- 报告头部 -->
+          <div class="report-header">
+            <h1>影刀RPA社区用户反馈数据分析报告</h1>
+            <div class="report-meta">
+              <span class="report-date">生成时间：{{ currentDate }}</span>
+            </div>
+          </div>
+
           <!-- KPI 指标卡 -->
-          <KpiCards />
+          <div class="kpi-cards">
+            <KpiCards />
+          </div>
 
-          <div class="chart-row">
-            <!-- 问题类型分布 -->
-            <div class="chart-item" @contextmenu.prevent="showContextMenu($event, 'typeDistribution')">
-              <h3>问题类型分布</h3>
-              <TypeDistributionChart />
-            </div>
-
-            <!-- 情绪-类型交叉分析 -->
-            <div class="chart-item" @contextmenu.prevent="showContextMenu($event, 'sentimentCross')">
-              <h3>情绪-类型交叉分析</h3>
-              <SentimentCrossChart />
+          <!-- 摘要部分 -->
+          <div class="report-section">
+            <h2>摘要</h2>
+            <div class="report-content">
+              <p>💡核心发现：本次分析基于影刀RPA社区用户反馈帖子，揭示了产品使用中的关键痛点与用户情绪分布规律。</p>
+              <p>界面操作与工具使用疑问合计占比41%，是用户最大的拦路虎；消极情绪占比55%，其中"程序报错排查"的消极占比最高，是负面情绪的"制造机"；生意参谋反爬限制引发群体性焦虑，包揽浏览量TOP3；循环逻辑与元素捕获是技术操作层面的"重灾区"。</p>
             </div>
           </div>
 
-          <div class="chart-row">
-            <!-- 高频词云 -->
-            <div class="chart-item full-width" @contextmenu.prevent="showContextMenu($event, 'wordCloud')">
-              <h3>高频词云</h3>
-              <WordCloudChart />
+          <!-- 数据核心洞察 -->
+          <div class="report-section">
+            <h2>一、数据核心洞察</h2>
+            <h3>1.1 问题类型分布总览</h3>
+            <div class="chart-row">
+              <!-- 问题类型分布 -->
+              <div class="chart-item" @contextmenu.prevent="showContextMenu($event, 'typeDistribution')">
+                <h4>问题类型分布</h4>
+                <TypeDistributionChart />
+              </div>
+
+              <!-- 情绪-类型交叉分析 -->
+              <div class="chart-item" @contextmenu.prevent="showContextMenu($event, 'sentimentCross')">
+                <h4>情绪-类型交叉分析</h4>
+                <SentimentCrossChart />
+              </div>
+            </div>
+            <div class="insight-box">
+              <p>💡图表解读：界面/窗口操作与工具使用疑问合计占比41%，反映出用户在前端交互和基础认知层面存在显著障碍。</p>
+            </div>
+
+            <h3>1.2 关键结论</h3>
+            <div class="insight-list">
+              <div class="insight-item">
+                <span class="insight-icon">•</span>
+                <span>前端交互是最大痛点："界面/窗口操作"是最常见的问题类型，说明用户在"元素捕获"、"窗口定位"等核心操作上频繁受阻</span>
+              </div>
+              <div class="insight-item">
+                <span class="insight-icon">•</span>
+                <span>基础认知门槛较高："工具使用疑问"占比较高，反映官方文档、系统提示或社区教程的易读性与检索效率可能不足</span>
+              </div>
+              <div class="insight-item">
+                <span class="insight-icon">•</span>
+                <span>消极情绪占比高：55%的消极情绪表明用户在使用过程中遇到了较多挫折</span>
+              </div>
             </div>
           </div>
 
-          <div class="chart-row">
-            <!-- 浏览量 Top 10 -->
-            <div class="chart-item" @contextmenu.prevent="showContextMenu($event, 'top10')">
-              <h3>浏览量 Top 10</h3>
-              <Top10Table />
+          <!-- 高频痛点分析 -->
+          <div class="report-section">
+            <h2>二、用户高频痛点分析</h2>
+            <div class="chart-row">
+              <!-- 高频词云 -->
+              <div class="chart-item full-width" @contextmenu.prevent="showContextMenu($event, 'wordCloud')">
+                <h4>高频词云</h4>
+                <WordCloudChart />
+              </div>
             </div>
+            <div class="chart-row">
+              <!-- 浏览量 Top 10 -->
+              <div class="chart-item" @contextmenu.prevent="showContextMenu($event, 'top10')">
+                <h4>浏览量 Top 10</h4>
+                <Top10Table />
+              </div>
 
-            <!-- Top 10 饼图 -->
-            <div class="chart-item" @contextmenu.prevent="showContextMenu($event, 'top10')">
-              <h3>浏览量分布</h3>
-              <Top10Chart />
+              <!-- Top 10 饼图 -->
+              <div class="chart-item" @contextmenu.prevent="showContextMenu($event, 'top10')">
+                <h4>浏览量分布</h4>
+                <Top10Chart />
+              </div>
             </div>
           </div>
 
-          <div class="chart-row">
-            <!-- 原始帖子表格 -->
-            <div class="chart-item full-width" @contextmenu.prevent="showContextMenu($event, 'posts')">
-              <h3>原始帖子数据</h3>
-              <PostTable />
-            </div>
+          <!-- 原始帖子数据 -->
+          <div class="report-section" @contextmenu.prevent="showContextMenu($event, 'posts')">
+            <h2>三、原始帖子数据</h2>
+            <PostTable />
           </div>
         </div>
 
@@ -93,7 +137,7 @@
           <h2>数据报告</h2>
           
           <!-- 报告列表 -->
-          <div class="report-section">
+          <div class="report-section" v-if="!selectedReport">
             <el-card>
               <template #header>
                 <div class="card-header">
@@ -113,13 +157,40 @@
                       <div class="report-title">{{ report.title }}</div>
                       <div class="report-meta">
                         <span>{{ new Date(report.timestamp).toLocaleString() }}</span>
-                        <el-button size="small" type="primary" @click="downloadSavedReport(report)">
-                          下载
-                        </el-button>
+                        <div class="report-actions">
+                          <el-button size="small" @click="viewReport(report)">
+                            查看
+                          </el-button>
+                          <el-button size="small" type="primary" @click="downloadSavedReport(report)">
+                            下载
+                          </el-button>
+                        </div>
                       </div>
                     </div>
                   </el-list-item>
                 </el-list>
+              </div>
+            </el-card>
+          </div>
+
+          <!-- 报告查看页面 -->
+          <div class="report-section" v-else>
+            <el-card>
+              <template #header>
+                <div class="card-header">
+                  <span>{{ selectedReport.title }}</span>
+                  <el-button size="small" @click="selectedReport = null">
+                    返回列表
+                  </el-button>
+                </div>
+              </template>
+              <div class="report-content">
+                <div class="report-viewer" v-html="selectedReport.content"></div>
+                <div class="report-actions" style="margin-top: 20px;">
+                  <el-button type="primary" @click="downloadSavedReport(selectedReport)">
+                    下载报告
+                  </el-button>
+                </div>
               </div>
             </el-card>
           </div>
@@ -192,6 +263,8 @@ const isSidebarCollapsed = ref(false)
 const activeMenu = ref('1')
 const showReportPage = ref(false)
 const reports = ref([])
+const currentDate = ref(new Date().toISOString().split('T')[0])
+const selectedReport = ref(null)
 
 const contextMenu = ref({
   visible: false,
@@ -246,106 +319,139 @@ const startAIAnalysis = async (type: string) => {
   
   try {
     let inputText = ''
+    let hasData = false
     
     // 根据类型获取对应的数据
     switch (type) {
       case 'typeDistribution':
         aiDialog.value.title = '问题类型分布 - AI 分析'
-        const typeData = await axios.get('http://localhost:3001/api/stats/distribution')
-        inputText = `分析以下问题类型分布数据：\n${typeData.data.types.map((item: any) => `${item['问题类型']}: ${item.count}`).join('\n')}`
+        try {
+          const typeData = await axios.get('http://localhost:3001/api/stats/distribution')
+          if (typeData.data && typeData.data.types && typeData.data.types.length > 0) {
+            inputText = `分析以下问题类型分布数据：\n${typeData.data.types.map((item: any) => `${item['问题类型']}: ${item.count}`).join('\n')}`
+            hasData = true
+          }
+        } catch (error) {
+          console.error('获取问题类型分布数据失败:', error)
+        }
         break
       case 'sentimentCross':
         aiDialog.value.title = '情绪-类型交叉分析 - AI 分析'
-        const crossData = await axios.get('http://localhost:3001/api/stats/distribution')
-        inputText = `分析以下情绪-类型交叉数据：\n${crossData.data.crossData.map((item: any) => `${item['问题类型']} - ${item['作者态度']}: ${item.count}`).join('\n')}`
+        try {
+          const crossData = await axios.get('http://localhost:3001/api/stats/distribution')
+          if (crossData.data && crossData.data.crossData && crossData.data.crossData.length > 0) {
+            inputText = `分析以下情绪-类型交叉数据：\n${crossData.data.crossData.map((item: any) => `${item['问题类型']} - ${item['作者态度']}: ${item.count}`).join('\n')}`
+            hasData = true
+          }
+        } catch (error) {
+          console.error('获取情绪-类型交叉数据失败:', error)
+        }
         break
       case 'wordCloud':
         aiDialog.value.title = '高频词云 - AI 分析'
-        const wordData = await axios.get('http://localhost:3001/api/stats/wordcloud')
-        inputText = `分析以下高频词数据：\n${wordData.data.slice(0, 20).map((item: any) => `${item.name}: ${item.value}`).join('\n')}`
+        try {
+          const wordData = await axios.get('http://localhost:3001/api/stats/wordcloud')
+          if (wordData.data && wordData.data.length > 0) {
+            inputText = `分析以下高频词数据：\n${wordData.data.slice(0, 20).map((item: any) => `${item.name}: ${item.value}`).join('\n')}`
+            hasData = true
+          }
+        } catch (error) {
+          console.error('获取高频词数据失败:', error)
+        }
         break
       case 'top10':
         aiDialog.value.title = '浏览量 Top 10 - AI 分析'
-        const top10Data = await axios.get('http://localhost:3001/api/stats/top10')
-        inputText = `分析以下浏览量 Top 10 数据：\n${top10Data.data.map((item: any, index: number) => `${index + 1}. ${item['帖子标题']}: ${item['浏览量']}`).join('\n')}`
+        try {
+          const top10Data = await axios.get('http://localhost:3001/api/stats/top10')
+          if (top10Data.data && top10Data.data.length > 0) {
+            inputText = `分析以下浏览量 Top 10 数据：\n${top10Data.data.map((item: any, index: number) => `${index + 1}. ${item['帖子标题']}: ${item['浏览量']}`).join('\n')}`
+            hasData = true
+          }
+        } catch (error) {
+          console.error('获取Top 10数据失败:', error)
+        }
         break
       case 'posts':
         aiDialog.value.title = '原始帖子数据 - AI 分析'
-        const postsData = await axios.get('http://localhost:3001/api/posts')
-        inputText = `分析以下帖子数据统计：\n总帖子数: ${postsData.data.total}\n当前页数量: ${postsData.data.list.length}\n部分帖子标题：\n${postsData.data.list.slice(0, 5).map((item: any) => item['帖子标题']).join('\n')}`
+        try {
+          const postsData = await axios.get('http://localhost:3001/api/posts')
+          if (postsData.data && postsData.data.total > 0) {
+            inputText = `分析以下帖子数据统计：\n总帖子数: ${postsData.data.total}\n当前页数量: ${postsData.data.list.length}\n部分帖子标题：\n${postsData.data.list.slice(0, 5).map((item: any) => item['帖子标题']).join('\n')}`
+            hasData = true
+          }
+        } catch (error) {
+          console.error('获取帖子数据失败:', error)
+        }
         break
+      default:
+        // 其他类型暂时不支持AI分析
+        aiDialog.value.error = '该模块暂不支持AI分析'
+        aiDialog.value.loading = false
+        return
+    }
+    
+    // 检查是否有数据
+    if (!hasData || !inputText) {
+      aiDialog.value.error = '该模块暂无数据，无法进行AI分析'
+      aiDialog.value.loading = false
+      return
     }
     
     // 调用 AI API
-    const response = await fetch(
-      "https://power-api.yingdao.com/oapi/power/v1/rest/flow/17dbe48a-a51e-4b16-b8b7-a0fa8cc53066/execute/stream",
-      {
-        headers: {
-          'Authorization': 'Bearer AP_FwHqmDY0df7Gvx4e',
-          'Content-Type': 'application/json'
-        },
-        method: "POST",
-        body: JSON.stringify({ "input": { "input_text_0": inputText } }),
-      }
-    )
+    console.log('开始调用 AI API...')
+    console.log('API 地址:', "https://power-api.yingdao.com/oapi/power/v1/rest/flow/17dbe48a-a51e-4b16-b8b7-a0fa8cc53066/execute")
+    console.log('输入数据:', inputText)
     
-    if (!response.ok) {
-      throw new Error(`API 请求失败: ${response.status}`)
-    }
-    
-    const reader = response.body?.getReader()
-    if (!reader) {
-      throw new Error('无法获取响应流')
-    }
-    
-    let currentResult = ''
-    let isSuccess = false
-    
-    async function read() {
-      const { done, value } = await reader.read()
-      if (done) {
-        aiDialog.value.loading = false
-        return
-      }
-      
-      const decoder = new TextDecoder('utf-8')
-      const chunk = decoder.decode(value)
-      
-      // 解析流式数据
-      const lines = chunk.split('\n')
-      for (const line of lines) {
-        if (line.startsWith('data:')) {
-          const dataStr = line.substring(5).trim()
-          if (dataStr === '[DONE') continue
-          
-          try {
-            const data = JSON.parse(dataStr)
-            if (data.code === 200 && data.success && data.data) {
-              const result = data.data.result
-              if (result && result.output_text_0) {
-                // 实时更新结果
-                if (typeof result.output_text_0 === 'string') {
-                  currentResult = result.output_text_0
-                  // 处理换行，将 \n 替换为 <br> 标签
-                  aiDialog.value.result = currentResult.replace(/\n/g, '<br>')
-                }
-                
-                // 标记成功状态
-                if (result.status === 'success') {
-                  isSuccess = true
-                }
-              }
-            }
-          } catch (e) {
-            console.error('解析数据失败:', e)
+    try {
+      // 尝试使用 axios 代替 fetch，可能能更好地处理跨域问题
+      console.log('使用 axios 调用 API...')
+      const result = await axios.post(
+        "https://power-api.yingdao.com/oapi/power/v1/rest/flow/17dbe48a-a51e-4b16-b8b7-a0fa8cc53066/execute",
+        { "input": { "input_text_0": inputText } },
+        {
+          headers: {
+            'Authorization': 'Bearer AP_FwHqmDY0df7Gvx4e',
+            'Content-Type': 'application/json'
           }
         }
-      }
+      )
       
-      read()
+      console.log('API 响应状态:', result.status)
+      console.log('API 响应数据:', result.data)
+      
+      if (result.data.code === 200 && result.data.success && result.data.data) {
+        const output = result.data.data.result?.output_text_0
+        if (output && typeof output === 'string') {
+          // 处理换行，将 \n 替换为 <br> 标签
+          aiDialog.value.result = output.replace(/\n/g, '<br>')
+          console.log('AI 分析成功，结果长度:', output.length)
+        } else {
+          throw new Error('API 返回数据格式错误')
+        }
+      } else {
+        throw new Error(`API 调用失败: ${result.data.msg || '未知错误'}`)
+      }
+    } catch (error) {
+      console.error('API 调用失败:', error)
+      // 显示更详细的错误信息
+      if (error.response) {
+        // 服务器返回错误状态码
+        console.error('服务器错误:', error.response.status, error.response.data)
+        aiDialog.value.error = `API 服务器错误: ${error.response.status} - ${error.response.data.msg || '未知错误'}`
+      } else if (error.request) {
+        // 请求已发送但没有收到响应
+        console.error('网络错误: 没有收到服务器响应')
+        aiDialog.value.error = '网络错误: 无法连接到 AI 服务，请检查网络连接'
+      } else {
+        // 请求配置出错
+        console.error('请求错误:', error.message)
+        aiDialog.value.error = `请求错误: ${error.message}`
+      }
+      aiDialog.value.loading = false
+      return
     }
     
-    await read()
+    aiDialog.value.loading = false
   } catch (error) {
     console.error('AI 分析失败:', error)
     aiDialog.value.error = 'AI 分析失败，请稍后重试'
@@ -389,6 +495,10 @@ const downloadSavedReport = (report) => {
   link.click()
   document.body.removeChild(link)
   URL.revokeObjectURL(url)
+}
+
+const viewReport = (report) => {
+  selectedReport.value = report
 }
 
 const closeContextMenu = () => {
@@ -539,6 +649,182 @@ h2 {
   max-width: 1400px;
   margin: 0 auto;
   gap: 20px;
+}
+
+/* 报告头部样式 */
+.report-header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding: 30px 0;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.report-header h1 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 16px;
+}
+
+.report-meta {
+  color: #666;
+  font-size: 14px;
+}
+
+/* KPI 卡片样式 */
+.kpi-cards {
+  margin-bottom: 30px;
+}
+
+/* 报告章节样式 */
+.report-section {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 30px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.report-section h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.report-section h3 {
+  font-size: 18px;
+  font-weight: 500;
+  color: #333;
+  margin: 24px 0 16px 0;
+}
+
+.report-section h4 {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 16px;
+}
+
+.report-content {
+  line-height: 1.6;
+  color: #666;
+}
+
+.report-content p {
+  margin-bottom: 16px;
+}
+
+/* 洞察框样式 */
+.insight-box {
+  background-color: #f8f9fa;
+  padding: 16px;
+  border-radius: 8px;
+  margin: 20px 0;
+  border-left: 4px solid #409eff;
+}
+
+.insight-box p {
+  margin: 0;
+  font-style: italic;
+}
+
+/* 洞察列表样式 */
+.insight-list {
+  margin: 20px 0;
+}
+
+.insight-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  line-height: 1.6;
+  color: #666;
+}
+
+.insight-icon {
+  font-size: 16px;
+  margin-right: 12px;
+  color: #409eff;
+  margin-top: 2px;
+}
+
+/* 图表项样式调整 */
+.chart-item {
+  min-height: 400px;
+}
+
+.chart-item h4 {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 16px;
+  align-self: flex-start;
+  width: 100%;
+}
+
+/* 报告操作按钮样式 */
+.report-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* 报告查看器样式 */
+.report-viewer {
+  line-height: 1.6;
+  color: #333;
+  padding: 20px 0;
+}
+
+.report-viewer h1,
+.report-viewer h2,
+.report-viewer h3,
+.report-viewer h4,
+.report-viewer h5,
+.report-viewer h6 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.report-viewer p {
+  margin-bottom: 10px;
+}
+
+.report-viewer ul,
+.report-viewer ol {
+  margin-left: 20px;
+  margin-bottom: 10px;
+}
+
+.report-viewer li {
+  margin-bottom: 5px;
+}
+
+.report-viewer code {
+  background-color: #f5f5f5;
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+.report-viewer pre {
+  background-color: #f5f5f5;
+  padding: 10px;
+  border-radius: 4px;
+  overflow-x: auto;
+  margin-bottom: 10px;
+}
+
+.report-viewer blockquote {
+  border-left: 4px solid #d9d9d9;
+  padding-left: 10px;
+  margin: 10px 0;
+  color: #666;
 }
 
 .chart-row {
